@@ -16,6 +16,7 @@ body {
     background-color: darkgrey;
     border: inset 1px;
     word-wrap: break-word;
+    overflow-y: scroll;
 }
 
 .consola p {

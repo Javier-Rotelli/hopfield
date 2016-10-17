@@ -34,7 +34,11 @@ var main = (function () {
     return {dict:dictionary, encoded};
   };
 
-  const encodeStr = (str, dict) => str.split(" ").reduce((acc, word) => acc.concat(dict[word]), []);
+  const encodeStr = (str, dict) =>
+    str.split(" ")
+       .reduce((acc, word) => acc.concat(dict[word]),
+         Array(Object.keys(dict).length).fill(0));
+
   const decodeArr = (arr, dict) => {
     const chunkSize = Object.keys(dict).length;
     const reversedDict = Object.keys(dict).reduce(function (obj, key) {
