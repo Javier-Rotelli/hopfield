@@ -1,0 +1,41 @@
+body {
+    background-color: #254f27;
+}
+
+.main {
+    margin: auto;
+    width: 80%;
+    font-family: "Andale Mono";
+}
+
+.consola {
+    font-family: monospace;
+    margin-top: 25px;
+    width: 100%;
+    height: 200px;
+    background-color: darkgrey;
+    border: inset 1px;
+    word-wrap: break-word;
+}
+
+.consola p {
+    margin: 2px;
+}
+
+.testForm {
+    width: 100%;
+    margin: 20px auto;
+    padding: 5px;
+    background-color: #3c803e;
+}
+
+.testForm label {
+    display: block;
+    margin: 5px 0;
+}
+
+#inputText {
+    width: 90%;
+    margin: auto;
+    height: 150px;
+}
