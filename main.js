@@ -9,6 +9,7 @@ var main = (function () {
 
   let network;
   let dictionary = [];
+  let neuronsNumber = 0;
 
   const encodeData = (data) => {
     const splitted = data.map((e) => e.split(" "));
@@ -37,7 +38,7 @@ var main = (function () {
   const encodeStr = (str, dict) =>
     str.split(" ")
        .reduce((acc, word) => acc.concat(dict[word]),
-         Array(Object.keys(dict).length).fill(0));
+         []);
 
   const decodeArr = (arr, dict) => {
     const chunkSize = Object.keys(dict).length;
@@ -48,24 +49,29 @@ var main = (function () {
     let str = "";
     let chunk = arr.splice(0, chunkSize);
     while (chunk.length > 0) {
-      str += reversedDict[chunk];
+      str += reversedDict[chunk] + " ";
       chunk = arr.splice(0, chunkSize);
     }
     return str;
   };
 
   const trainNetwork = (data) => {
-    const neuronsNumber = data.reduce(((max, arr) => max < arr.length ? arr.length : max), 0);
+    neuronsNumber = data.reduce(((max, arr) => max < arr.length ? arr.length : max), 0);
     log(`Se usara un total de ${neuronsNumber} Neuronas`);
     const network = new synaptic.Architect.Hopfield(neuronsNumber);
-    const normalizedData = data.map((arr) => {
-      if (arr.length < neuronsNumber) {
-        arr.fill(0, arr.length - 1, neuronsNumber - 1);
-      }
-      return arr;
-    });
-    network.learn(normalizedData);
+    const normalizedData = data.map((arr) => normalize(arr, neuronsNumber, Object.keys(dictionary).length));
+    log('Datos de entrenamiento:');
+    log(JSON.stringify( network.learn(normalizedData)));
     return network;
+  };
+
+  const normalize = (arr,neuronsNumber, wordSize) => {
+    const emptyWord = Array(wordSize).fill(0);
+    emptyWord[0] = 1;
+    while (arr.length < neuronsNumber) {
+      arr = arr.concat(emptyWord);
+    }
+    return arr;
   };
 
 
@@ -81,11 +87,12 @@ var main = (function () {
   const log = (message) => {
     var consola = $('.consola');
     consola.append(`<p>${message}</p>`);
+    consola.scrollTop(consola[0].scrollHeight);
   };
 
   const procesar = (texto) => {
     const encoded = encodeStr(texto, dictionary);
-    return decodeArr(network.feed(encoded), dictionary);
+    return decodeArr(network.feed(normalize(encoded, neuronsNumber, Object.keys(dictionary).length)), dictionary);
   };
 
   return {
